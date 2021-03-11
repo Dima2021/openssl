@@ -1,0 +1,19 @@
+name: 'whitesource-ua-azdo-c'
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: CmdLine@2
+  displayName: 'WhiteSource Scan'
+  inputs:
+    script: |
+      echo Downloading WhiteSource Unified Agent
+      curl -LJO https://github.com/whitesource/unified-agent-distribution/releases/latest/download/wss-unified-agent.jar
+      export WS_APIKEY=c6ea57d9411e4226ad8948f25199ae0c6a4dfda311a948a692de1bc5fac994cb
+      export WS_RESOLVEALLDEPENDENCIES=false
+      echo WhiteSource Scan
+      java -jar wss-unified-agent.jar -product "$(Build.Repository.Name)" -project "$(Build.DefinitionName)"
